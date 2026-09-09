@@ -1,0 +1,10 @@
+Refund Policy
+
+Customers are eligible for a full refund if:
+- The order was not delivered within 7 business days of the promised delivery date.
+- The product received was damaged, defective, or incorrect.
+- The customer cancels the order before it is shipped.
+
+Refunds for orders under $50 can be processed automatically by the system.
+Refunds for orders $50 or above require human approval before processing.
+Refunds are typically processed within 5-7 business days after approval.

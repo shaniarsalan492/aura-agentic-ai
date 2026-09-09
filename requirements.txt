@@ -1,0 +1,9 @@
+crewai
+crewai-tools
+google-generativeai
+langchain
+langchain-google-genai
+chromadb
+sqlalchemy
+streamlit
+python-dotenv
