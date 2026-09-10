@@ -7,3 +7,6 @@ chromadb
 sqlalchemy
 streamlit
 python-dotenv
+sentence-transformers
+langchain-huggingface
+pypdf

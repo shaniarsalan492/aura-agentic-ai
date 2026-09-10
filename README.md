@@ -48,6 +48,8 @@ Communication Agent
 - **Database:** SQLite (customers, orders, approvals, tickets)
 - **Frontend:** Streamlit
 - **Email:** SMTP (Gmail)
+| RAG | LangChain + ChromaDB, modular load/clean/chunk pipeline with hybrid dense-sparse reranking |
+| Embeddings | Local (sentence-transformers/all-MiniLM-L6-v2) — swappable with Gemini embeddings via config |
 
 ## Project Structure
 
@@ -62,8 +64,13 @@ aura-project/
 │   │   ├── models.py             # schema + seed data
 │   │   └── db.py                 # connection helper
 │   ├── knowledge_base/
-│   │   ├── ingestion.py          # RAG document chunking + embedding
-│   │   └── vectorstore.py        # Chroma query interface
+│   │   ├── loader.py          # loads .txt and .pdf source documents
+│   │   ├── cleaner.py         # normalizes/cleans raw text before chunking
+│   │   ├── chunker.py         # splits cleaned documents into overlapping chunks
+│   │   ├── embeddings.py      # swappable local/Gemini embedding provider
+│   │   ├── reranker.py        # hybrid dense+sparse reranking of retrieved chunks
+│   │   ├── ingestion.py       # full pipeline: load -> clean -> chunk -> embed -> persist
+│   │   └── vectorstore.py     # two-stage retrieval: vector search + rerank     # Chroma query interface
 │   ├── tools/
 │   │   ├── order_tools.py
 │   │   ├── policy_tools.py
@@ -122,6 +129,17 @@ streamlit run dashboard/app.py
 - Real email automation via SMTP
 - Sentiment analysis and automatic support ticket creation
 - Live monitoring dashboard for orders, agent runs, approvals, and tickets
+
+## RAG Pipeline Detail
+
+The knowledge base ingests both plain-text and PDF source documents (including a 17-page, 
+28-section company policy handbook) through a modular pipeline: documents are loaded, 
+cleaned of formatting artifacts, split into overlapping chunks, and embedded using a 
+locally-run sentence-transformers model (swappable with Gemini's embedding API via a 
+config flag). Retrieval uses a two-stage approach: a broad vector-similarity candidate 
+search followed by hybrid dense+sparse reranking, which re-scores candidates using both 
+their embedding similarity and lexical keyword overlap with the query — improving 
+precision over naive top-k vector search alone.
 
 ## Example Scenario
 

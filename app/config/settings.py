@@ -21,3 +21,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 DB_PATH = os.path.join(BASE_DIR, "database", "aura.db")
 CHROMA_DIR = os.path.join(BASE_DIR, "knowledge_base", "chroma_store")
 KNOWLEDGE_BASE_DIR = os.path.join(BASE_DIR, "knowledge_base")
+
+
+# --- RAG Pipeline Configuration ---
+CHUNK_SIZE = 300
+CHUNK_OVERLAP = 50
+RETRIEVAL_CANDIDATES = 6   # broad candidate pool retrieved before reranking
+FINAL_K = 2                # final number of chunks returned after reranking
+
+# --- Embedding Provider Toggle ---
+USE_LOCAL_EMBEDDINGS = True  # True = local sentence-transformers (free, unlimited, for dev/testing)
+                              # False = Gemini API embeddings (for final submission)
+LOCAL_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
