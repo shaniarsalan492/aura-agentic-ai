@@ -9,14 +9,14 @@ def _tokenize(text: str) -> list[str]:
 
 def _lexical_overlap_score(query_tokens: list[str], doc_text: str) -> float:
     """Computes a term-overlap score between the query and a document chunk —
-    a sparse signal used alongside dense (embedding) similarity."""
-    doc_tokens = _tokenize(doc_text)
-    if not doc_tokens:
+    a sparse signal used alongside dense (embedding) similarity. Measured as the
+    fraction of the query's own terms that appear in the document, which better
+    reflects relevance than raw term density in the document."""
+    if not query_tokens:
         return 0.0
-    doc_counts = Counter(doc_tokens)
-    overlap = sum(doc_counts[t] for t in query_tokens)
-    return overlap / len(doc_tokens)
-
+    doc_tokens = set(_tokenize(doc_text))
+    matched = sum(1 for t in query_tokens if t in doc_tokens)
+    return matched / len(query_tokens)
 
 def rerank(query: str, candidates: list[Document], top_k: int = 2) -> list[Document]:
     """Reranks vector-retrieved candidates using a hybrid dense+sparse score:
