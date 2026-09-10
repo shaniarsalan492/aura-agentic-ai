@@ -1,5 +1,8 @@
 from crewai.tools import tool
 from app.database.db import get_connection
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 @tool("Approval Request Tool")
@@ -14,4 +17,5 @@ def create_approval_request(order_id: str, request_type: str) -> str:
     )
     conn.commit()
     conn.close()
+    logger.info(f"APPROVAL REQUIRED: order={order_id}, type={request_type}, status=pending")
     return f"Approval request created for order {order_id} ({request_type})."
