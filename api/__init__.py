@@ -1,0 +1,1 @@
+"""REST API layer exposing AURA's multi-agent pipeline as HTTP endpoints."""
