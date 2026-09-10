@@ -3,7 +3,9 @@ import sqlite3
 import os
 import sys
 import pandas as pd
-import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from app.database.models import create_database, seed_sample_data
 from app.knowledge_base.ingestion import build_vectorstore
 
@@ -13,9 +15,6 @@ if not os.path.exists("database/aura.db"):
 
 if not os.path.exists("knowledge_base/chroma_store"):
     build_vectorstore()
-    
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE_DIR, "database", "aura.db")
