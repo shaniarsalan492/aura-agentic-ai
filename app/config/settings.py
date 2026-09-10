@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+import tempfile
 
 load_dotenv()
 
@@ -31,8 +32,32 @@ FINAL_K = 2
 # --- Business Rules ---
 REFUND_APPROVAL_THRESHOLD = 50.0
 
+
+
 # --- Paths ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-DB_PATH = os.path.join(BASE_DIR, "database", "aura.db")
-CHROMA_DIR = os.path.join(BASE_DIR, "knowledge_base", "chroma_store")
-KNOWLEDGE_BASE_DIR = os.path.join(BASE_DIR, "knowledge_base")
+
+
+def _get_writable_data_dir():
+    """Returns a writable directory for the database and vector store.
+    Tries the project folder first (normal local development); falls back
+    to the system temp directory if the project folder is read-only
+    (e.g. on Streamlit Community Cloud, where the cloned repo is not writable)."""
+    candidate = os.path.join(BASE_DIR, "database")
+    try:
+        os.makedirs(candidate, exist_ok=True)
+        test_file = os.path.join(candidate, ".write_test")
+        with open(test_file, "w") as f:
+            f.write("ok")
+        os.remove(test_file)
+        return BASE_DIR
+    except (OSError, PermissionError):
+        temp_dir = os.path.join(tempfile.gettempdir(), "aura_data")
+        os.makedirs(temp_dir, exist_ok=True)
+        return temp_dir
+
+
+_DATA_DIR = _get_writable_data_dir()
+DB_PATH = os.path.join(_DATA_DIR, "database", "aura.db") if _DATA_DIR == BASE_DIR else os.path.join(_DATA_DIR, "aura.db")
+CHROMA_DIR = os.path.join(_DATA_DIR, "knowledge_base", "chroma_store") if _DATA_DIR == BASE_DIR else os.path.join(_DATA_DIR, "chroma_store")
+KNOWLEDGE_BASE_DIR = os.path.join(BASE_DIR, "knowledge_base")  # source .txt/.pdf files are read-only, always from repo
