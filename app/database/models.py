@@ -1,8 +1,10 @@
+import os
 import sqlite3
 from app.config.settings import DB_PATH
 
 
 def create_database():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
