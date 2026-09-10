@@ -1,6 +1,6 @@
 from datetime import datetime
 from crewai import Task
-from app.agents.definitions import (
+from app.agents import (
     sentiment_agent, order_agent, rag_agent, decision_agent, communication_agent
 )
 

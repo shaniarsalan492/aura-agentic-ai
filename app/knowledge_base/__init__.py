@@ -1,0 +1,1 @@
+"""RAG knowledge base: document ingestion, cleaning, chunking, embedding, and retrieval."""

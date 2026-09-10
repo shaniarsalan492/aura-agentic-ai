@@ -1,5 +1,5 @@
 from crewai import Crew, Process
-from app.agents.definitions import (
+from app.agents import (
     sentiment_agent, order_agent, rag_agent, decision_agent, communication_agent, manager_agent
 )
 from app.agents.tasks import (

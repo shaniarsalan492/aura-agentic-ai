@@ -1,0 +1,1 @@
+"""Centralized application configuration: API keys, model settings, and business rules."""
