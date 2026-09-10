@@ -1,6 +1,7 @@
 from crewai.tools import tool
 from app.database.db import get_connection
 from app.utils.logger import get_logger
+from app.models.schemas import OrderSchema
 
 logger = get_logger(__name__)
 
@@ -26,7 +27,17 @@ def order_lookup_tool(order_id: str) -> str:
         logger.warning(f"Order not found: {order_id}")
         return f"No order found with ID {order_id}."
 
-    columns = ["order_id", "customer_name", "customer_email", "product_name",
-               "quantity", "price", "order_status", "delivery_status", "order_date"]
+    order = OrderSchema(
+        order_id=row[0],
+        customer_id="",  # not selected in this query; fine to leave blank here
+        customer_name=row[1],
+        customer_email=row[2],
+        product_name=row[3],
+        quantity=row[4],
+        price=row[5],
+        order_status=row[6],
+        delivery_status=row[7],
+        order_date=row[8],
+    )
     logger.info(f"Order found: {order_id}")
-    return str(dict(zip(columns, row)))
+    return order.model_dump_json()
