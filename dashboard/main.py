@@ -6,6 +6,30 @@ import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+def check_password():
+    """Simple password gate using Streamlit session state and secrets."""
+    def password_entered():
+        correct_password = st.secrets.get("DASHBOARD_PASSWORD", os.getenv("DASHBOARD_PASSWORD", "aura2026"))
+        if st.session_state.get("password_input") == correct_password:
+            st.session_state["password_correct"] = True
+            del st.session_state["password_input"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if st.session_state.get("password_correct", False):
+        return True
+
+    st.text_input("Enter password to access AURA Dashboard", type="password",
+                   on_change=password_entered, key="password_input")
+    if "password_correct" in st.session_state and not st.session_state["password_correct"]:
+        st.error("Incorrect password.")
+    return False
+
+
+if not check_password():
+    st.stop()
+
+
 from app.database.models import create_database, seed_sample_data
 from app.knowledge_base.ingestion import build_vectorstore
 
