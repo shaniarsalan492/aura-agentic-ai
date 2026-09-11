@@ -9,7 +9,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 def check_password():
     """Simple password gate using Streamlit session state and secrets."""
     def password_entered():
-        correct_password = st.secrets.get("DASHBOARD_PASSWORD", os.getenv("DASHBOARD_PASSWORD", "aura2026"))
+        try:
+            correct_password = st.secrets.get("DASHBOARD_PASSWORD")
+        except Exception:
+            correct_password = None
+        if correct_password is None:
+            correct_password = os.getenv("DASHBOARD_PASSWORD", "aura2026")
+
         if st.session_state.get("password_input") == correct_password:
             st.session_state["password_correct"] = True
             del st.session_state["password_input"]
